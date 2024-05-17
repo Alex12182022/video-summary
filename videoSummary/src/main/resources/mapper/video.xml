@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.summary.dao.VideoDao">
+
+    <insert id="addVideos" parameterType="com.summary.domain.Video" useGeneratedKeys="true" keyProperty="id">
+        insert into
+            t_video(
+                userId,
+                url,
+                createTime
+            )values(
+                #{userId},
+                #{url},
+                #{createTime}
+            )
+    </insert>
+
+    <insert id="batchAddVideoBinaryPictures" parameterType="java.util.List">
+        insert into
+            t_video_binary_picture(
+                videoId,
+                frameNo,
+                url,
+                videoTimestamp,
+                createTime
+            )
+            values
+            <foreach collection="pictureList" item="picture" separator=",">
+                (
+                    #{picture.videoId},
+                    #{picture.frameNo},
+                    #{picture.url},
+                    #{picture.videoTimestamp},
+                    #{picture.createTime}
+                )
+            </foreach>
+    </insert>
+
+    <select id="getVideoBinaryImages" parameterType="java.util.Map" resultType="com.summary.domain.VideoBinaryPicture">
+        select
+            *
+        from
+            t_video_binary_picture
+        where
+            videoId = #{videoId}
+            <if test="frameNo != null and frameNo != '' ">
+                and frameNo = #{frameNo}
+            </if>
+            <if test="videoTimestamp != null">
+                and videoTimestamp = #{videoTimestamp}
+            </if>
+    </select>
+
+
+</mapper>

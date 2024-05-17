@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD MAPPER 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.summary.dao.UserDao">
+
+    <select id="getUserByPhone" parameterType="java.lang.String" resultType="com.summary.domain.User">
+        select
+            *
+        from
+            t_user
+        where
+            phone = #{phone}
+    </select>
+
+    <insert id="addUser" parameterType="com.summary.domain.User" useGeneratedKeys="true" keyProperty="id">
+        insert into
+            t_user(
+            phone,
+            email,
+            password,
+            salt,
+            createTime
+        )values (
+                    #{phone},
+                    #{email},
+                    #{password},
+                    #{salt},
+                    #{createTime}
+                )
+    </insert>
+
+
+    <select id="getUserById" parameterType="java.lang.Long" resultType="com.summary.domain.User">
+        select
+            *
+        from
+            t_user
+        where
+            id = #{id}
+    </select>
+
+    <update id="updateUsers" parameterType="com.summary.domain.User">
+        update
+        t_user
+        set
+        <if test="phone != null and phone != '' ">
+            phone = #{phone},
+        </if>
+        <if test="email != null and email != '' ">
+            email = #{email},
+        </if>
+        <if test="password != null and password != '' ">
+            password = #{password},
+        </if>
+        updateTime = #{updateTime}
+        where
+        id = #{id}
+    </update>
+
+    <select id="getUserByPhoneOrEmail" parameterType="java.lang.String" resultType="com.summary.domain.User">
+        select
+            *
+        from
+            t_user
+        where
+            phone = #{phone} or email = #{email}
+    </select>
+
+
+
+    <delete id="deleteRefreshToken">
+        delete from
+            t_refresh_token
+        where
+            refreshToken = #{refreshToken}
+    </delete>
+
+    <insert id="addRefreshToken">
+        insert into
+            t_refresh_token(
+            refreshToken,
+            userId,
+            createTime
+        )values(
+                   #{refreshToken},
+                   #{userId},
+                   #{createTime}
+               )
+    </insert>
+
+    <select id="getRefreshTokenDetail" parameterType="java.lang.String" resultType="com.summary.domain.RefreshTokenDetail">
+        select
+            *
+        from
+            t_refresh_token
+        where
+            refreshToken = #{refreshToken}
+    </select>
+
+
+</mapper>
